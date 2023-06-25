@@ -3,9 +3,21 @@ import cv2
 import math
 from flask_mysqldb import MySQL
 import os
-from db_config import app,mysql
+import json
 import datetime
+from flask import redirect,url_for
 
+def update_db(new_data):
+    with open("db.json",'r+') as file:
+        
+        # First we load existing data into a dict.
+        file_data = json.load(file)
+        # Join new_data with file_data inside emp_details
+        file_data["detections"].append(new_data)
+        # Sets file's current position at offset.
+        file.seek(0)
+        # convert back to json.
+        json.dump(file_data, file, indent = 4)
 
 def video_detection(path_x):
     model = YOLO('best_8s.pt')
@@ -23,7 +35,7 @@ def video_detection(path_x):
         
         if success:
             # Run YOLOv8 inference on the frame
-            results = model.track(frame,conf=0.25,iou=0.5,device=0,classes=[2,3,8],tracker="botsort.yaml",persist=True) 
+            results = model.track(frame,conf=0.25,iou=0.5,classes=[2,3,8],tracker="botsort.yaml",persist=True) 
             img = results[0].plot()
             height, width, _ = img.shape
             # print(results)
@@ -67,17 +79,18 @@ def video_detection(path_x):
     # Release the video capture object and close the display window
     print("work2")
     cap.release()
-    current_time = datetime.datetime.now()
-    with app.app_context():
-        
-        cur = mysql.connection.cursor()
-        insert = cur.execute("INSERT INTO detection(filename,timestamp, sheep_count, cow_count, deer_count, total_count) VALUES (%s,%s,%s,%s,%s,%s)", (path_x, current_time,count[8],count[2],count[3],count[2]+count[3]+count[8]))
-        mysql.connection.commit()
-        if insert:
-            print("work")
-        cur.close()
+    new_data = {
+        "filename" : path_x,
+        "timestamp" : datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
+        "sheep_count" : count[8],
+        "cow_count" : count[2],
+        "deer_count" : count[3],
+        "total_count" : count[2] + count[3] + count[8]
+    }
+    
+    update_db(new_data=new_data)
 
-
+    
 
 
 

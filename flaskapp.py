@@ -2,12 +2,12 @@ from flask import Flask, render_template, Response,jsonify,request,session,redir
 
 from flask_wtf import FlaskForm
 import pymysql
-from db_config import app, mysql
+from db_config import app
 from wtforms import FileField, SubmitField,StringField,DecimalRangeField,IntegerRangeField
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired,NumberRange
 import os
-
+import pandas
 import cv2
 
 from YOLO_Video import video_detection
@@ -62,14 +62,9 @@ def front():
                                              secure_filename(file.filename))
         
     
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM detection")
-    rows = cursor.fetchall()
-    
-    cursor.close() 
-    
-    
-    return render_template('video_detect.html', form=form, rows=rows)
+    rows = pandas.read_json("db.json")
+    table = rows["detections"]
+    return render_template('video_detect.html', form=form,table=table)
             
 @app.route('/video')
 def video():

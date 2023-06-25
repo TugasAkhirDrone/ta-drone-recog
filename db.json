@@ -1,0 +1,12 @@
+{
+    "detections": [
+        {
+            "filename": "D:\\Work\\Computervisionprojects-main\\YOLOv8-CrashCourse\\drone_animal_tracking_nodb\\static/files\\Kambing_2.mkv",
+            "timestamp": "06/25/2023, 21:02:46",
+            "sheep_count": 0,
+            "cow_count": 0,
+            "deer_count": 0,
+            "total_count": 0
+        }
+    ]
+}

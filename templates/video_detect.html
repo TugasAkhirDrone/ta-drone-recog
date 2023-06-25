@@ -54,7 +54,7 @@
 
     <table class="table table-striped align-middle text-center">
       <tr>
-      <th>ID</th>
+    
       <th>Timestamp</th>
       <th>File</th>
       <th>Sheep</th>
@@ -65,15 +65,15 @@
 
       </tr>
 
-      {%for i in rows%}
+      {%for i in table%}
       <tr>
-      <td>{{i[0]}}</td>
-      <td>{{i[1]}}</td>
-      <td>{{i[2]}}</td>
-      <td>{{i[3]}}</td>
-      <td>{{i[4]}}</td>
-      <td>{{i[5]}}</td>
-      <td>{{i[6]}}</td>
+      <td>{{i["timestamp"]}}</td>
+      <td>{{i["filename"]}}</td>
+      <td>{{i["sheep_count"]}}</td>
+      <td>{{i["cow_count"]}}</td>
+      <td>{{i["deer_count"]}}</td>
+      <td>{{i["total_count"]}}</td>
+ 
 
 
       
